@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/enter"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_medium"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp">
+
+        <RadioButton
+            android:id="@+id/rBmorning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/morning"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_medium"/>
+
+        <RadioButton
+            android:id="@+id/rBday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_medium"/>
+
+        <RadioButton
+            android:id="@+id/rBfHoliday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fHoliday"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_medium"/>
+
+        <RadioButton
+            android:id="@+id/rBsHoliday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sHoliday"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_medium"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:text="@string/hello"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_medium"
+        android:visibility="invisible"/>
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
+</LinearLayout>

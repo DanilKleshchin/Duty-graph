@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Duty Graph</string>
+    <string name="particular_date">Particular date</string>
+    <string name="whole_month">Whole month</string>
+    <string name="hello">Choose date</string>
+    <string name="morning">Duty at 8.00</string>
+    <string name="day">Duty at 19.00</string>
+    <string name="sHoliday">Holiday</string>
+    <string name="fHoliday">Rest after a night duty.</string>
+    <string name="enter">What is the duty today?</string>
+    <string name="month_picker">Month picker</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+    <array name="months">
+        <item name = "january">January</item>
+        <item name = "february">February</item>
+        <item name = "march">March</item>
+        <item name = "april">April</item>
+        <item name = "may">May</item>
+        <item name = "june">June</item>
+        <item name = "july">July</item>
+        <item name = "august">August</item>
+        <item name = "september">September</item>
+        <item name = "october">October</item>
+        <item name = "november">November</item>
+        <item name = "december">December</item>
+    </array>
+</resources>
