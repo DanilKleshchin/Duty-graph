@@ -33,7 +33,7 @@
             android:id="@+id/rBday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/day"
+            android:text="@string/evening"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_medium"/>
 
@@ -41,7 +41,7 @@
             android:id="@+id/rBfHoliday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fHoliday"
+            android:text="@string/rest"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_medium"/>
 
@@ -49,7 +49,7 @@
             android:id="@+id/rBsHoliday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sHoliday"
+            android:text="@string/holiday"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_medium"/>
     </RadioGroup>
@@ -61,7 +61,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:clickable="true"
-        android:text="@string/hello"
+        android:text="@string/choose_date"
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_size_medium"
         android:visibility="invisible"/>

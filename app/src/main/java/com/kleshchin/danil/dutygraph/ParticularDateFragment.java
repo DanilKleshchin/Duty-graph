@@ -132,16 +132,16 @@ public class ParticularDateFragment extends Fragment {
                 CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, duty);
                 switch (calculateDate.Calculate()) {
                     case 1:
-                        strDuty = "Смена с 8.00";
+                        strDuty = getResources().getString(R.string.morning);
                         break;
                     case 2:
-                        strDuty = "Смена с 19.00";
+                        strDuty = getResources().getString(R.string.evening);
                         break;
                     case 3:
-                        strDuty = "Отсыпной";
+                        strDuty = getResources().getString(R.string.rest);
                         break;
                     case 4:
-                        strDuty = "Выходной";
+                        strDuty = getResources().getString(R.string.holiday);
                         break;
                 }
                 tvDate.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
@@ -197,16 +197,16 @@ public class ParticularDateFragment extends Fragment {
             CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, duty);
             switch (calculateDate.Calculate()) {
                 case 1:
-                    strDuty = "Смена с 8.00";
+                    strDuty = getResources().getString(R.string.morning);
                     break;
                 case 2:
-                    strDuty = "Смена с 15.00";
+                    strDuty = getResources().getString(R.string.evening);
                     break;
                 case 3:
-                    strDuty = "Отсыпной";
+                    strDuty = getResources().getString(R.string.rest);
                     break;
                 case 4:
-                    strDuty = "Выходной";
+                    strDuty = getResources().getString(R.string.holiday);
                     break;
             }
             tvDate.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
@@ -220,8 +220,8 @@ public class ParticularDateFragment extends Fragment {
         public void onClick(View v) {
             if (context_ != null) {
                 DatePickerDialog datePicker = new DatePickerDialog(context_, myCallBack, myYear, myMonth, myDay);
-                datePicker.setCancelable(false);
-                datePicker.setTitle("Select the date");
+                datePicker.setCancelable(true);
+                datePicker.setTitle(getString(R.string.select_date));
                 datePicker.show();
             }
         }

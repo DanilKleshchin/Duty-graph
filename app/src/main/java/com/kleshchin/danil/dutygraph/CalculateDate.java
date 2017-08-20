@@ -8,6 +8,16 @@ import java.util.List;
  * Created by 804307 on 15.08.2016.
  */
 class CalculateDate {
+    private int duty;
+    private int year;
+    private int monthOfYear;
+    private int dayOfMonth;
+    private int currentYear;
+    private int currentMonthOfYear;
+    private int currentDayOfMonth;
+    private List<Integer> thirtyOne = Arrays.asList(0, 2, 4, 6, 7, 9, 11);
+    private List<Integer> thirty = Arrays.asList(3, 5, 8, 10);
+
     CalculateDate(int year, int monthOfYear, int dayOfMonth, int currentYear, int currentMonthOfYear, int currentDayOfMonth, int duty) {
         this.year = year;
         this.monthOfYear = monthOfYear;
@@ -82,14 +92,4 @@ class CalculateDate {
         if (this.duty > 4)
             this.duty = 1;
     }
-
-    private int duty;
-    private int year;
-    private int monthOfYear;
-    private int dayOfMonth;
-    private int currentYear;
-    private int currentMonthOfYear;
-    private int currentDayOfMonth;
-    private List<Integer> thirtyOne = Arrays.asList(0, 2, 4, 6, 7, 9, 11);
-    private List<Integer> thirty = Arrays.asList(3, 5, 8, 10);
 }

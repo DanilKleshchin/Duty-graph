@@ -1,82 +1,118 @@
+
 package com.kleshchin.danil.dutygraph;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
+
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by Danil Kleshchin on 14.08.2017.
  */
 public class MonthFragment extends Fragment {
-    TextView monthName_;
-    MonthAdapter adapter_;
-    RecyclerView recyclerView_;
+    private static int popupCheckedItem_ = -1;
+    private TextView popupDutyPicker_;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_month, container, false);
-        recyclerView_ = (RecyclerView) view.findViewById(R.id.month_fragment_recycler_view);
-        monthName_ = (TextView) view.findViewById(R.id.month_name);
-        final int monthNumber = Calendar.getInstance().get(Calendar.MONTH);
-        final String[] months = getResources().getStringArray(R.array.months);
-        monthName_.setText(months[monthNumber]);
-        monthName_.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (container != null) {
-                    showDialog(container.getContext(), months, monthNumber);
-                }
-            }
-        });
         if (container != null) {
-            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(container.getContext(), 7);
-            recyclerView_.setLayoutManager(layoutManager);
+            final Context context = container.getContext();
+            popupDutyPicker_ = (TextView) view.findViewById(R.id.pop_duty_picker);
+            popupDutyPicker_.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPopupMenu(v, context);
+                }
+            });
+            showCalendar(context, -1);
         }
-        int days = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
-        adapter_ = new MonthAdapter(days);
-        recyclerView_.setAdapter(adapter_);
         return view;
     }
 
-    private void showDialog(@NonNull Context context, @NonNull final String[] months, int monthNumber) {
-        final Dialog dialog = new Dialog(context);
-        dialog.setTitle(R.string.month_picker);
-        dialog.setContentView(R.layout.dialog_pick_month);
-        Button b1 = (Button) dialog.findViewById(R.id.set_button);
-        final NumberPicker np = (NumberPicker) dialog.findViewById(R.id.month_picker);
-        np.setMaxValue(months.length - 1);
-        np.setMinValue(0);
-        np.setWrapSelectorWheel(false);
-        np.setValue(monthNumber);
-        np.setFormatter(new NumberPicker.Formatter() {
+    private void showCalendar(@NonNull Context context, int dutyNumber_) {
+        CaldroidMonthFragment caldroidFragment = new CaldroidMonthFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        caldroidFragment.setArguments(args);
+        Map<String, Object> extraData = caldroidFragment.getExtraData();
+        extraData.put("DUTY", dutyNumber_);
+        caldroidFragment.refreshView();
+        FragmentTransaction t = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.month_calendar, caldroidFragment);
+        t.commit();
+    }
+
+    private void showPopupMenu(@NonNull View v, @NonNull final Context context) {
+        final PopupMenu popupMenu = new PopupMenu(context, v);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
+        setPopupItemChecked(popupCheckedItem_, 4, popupMenu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public String format(int value) {
-                return months[value];
+            public boolean onMenuItemClick(MenuItem item) {
+                int dutyNumber;
+                switch (item.getItemId()) {
+                    case R.id.duty_morning_pop:
+                        setPopupItemChecked(0, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.morning));
+                        popupCheckedItem_ = 0;
+                        dutyNumber = 1;
+                        break;
+                    case R.id.duty_evening_pop:
+                        setPopupItemChecked(1, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.evening));
+                        popupCheckedItem_ = 1;
+                        dutyNumber = 2;
+                        break;
+                    case R.id.rest_pop:
+                        setPopupItemChecked(2, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.rest));
+                        popupCheckedItem_ = 2;
+                        dutyNumber = 3;
+                        break;
+                    case R.id.holiday_pop:
+                        setPopupItemChecked(3, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.holiday));
+                        popupCheckedItem_ = 3;
+                        dutyNumber = 4;
+                        break;
+                    default:
+                        return false;
+                }
+                showCalendar(context, dutyNumber);
+                popupMenu.dismiss();
+                return true;
             }
         });
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                monthName_.setText(months[np.getValue()]);
-                int days = Calendar.getInstance().getCr(Calendar.FEBRUARY);
-                adapter_.setDayInMonthCount(days);
-                adapter_.notifyDataSetChanged();
-                dialog.dismiss();
+        popupMenu.show();
+    }
+
+    private void setPopupItemChecked(int position, int itemsCount, @NonNull PopupMenu popupMenu) {
+        if (position > -1 && position <= itemsCount) {
+            for (int i = 0; i < itemsCount; ++i) {
+                popupMenu.getMenu().getItem(i).setChecked(false);
             }
-        });
-        dialog.show();
+            popupMenu.getMenu().getItem(position).setChecked(true);
+        }
     }
 }
