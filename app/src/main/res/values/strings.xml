@@ -5,8 +5,12 @@
     <string name="choose_date">Choose date</string>
     <string name="morning">Duty at 8.00</string>
     <string name="evening">Duty at 19.00</string>
-    <string name="holiday">Holiday</string>
-    <string name="rest">Rest after a night duty.</string>
+    <string name="rest">Vocation</string>
+    <string name="holiday">Rest</string>
+    <string name="calendar_morning">morning</string>
+    <string name="calendar_evening">night</string>
+    <string name="calendar_rest">vocation</string>
+    <string name="calendar_holiday">rest</string>
     <string name="enter">What is the duty today?</string>
     <string name="month_picker">Month picker</string>
     <string name="set">Set</string>

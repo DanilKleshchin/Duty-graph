@@ -28,6 +28,8 @@ import java.util.Map;
  */
 public class MonthFragment extends Fragment {
     private static int popupCheckedItem_ = -1;
+    private static int pickedMonth_;
+    private static int pickedYear_;
     private TextView popupDutyPicker_;
     @Nullable
     @Override
@@ -35,24 +37,38 @@ public class MonthFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_month, container, false);
         if (container != null) {
             final Context context = container.getContext();
-            popupDutyPicker_ = (TextView) view.findViewById(R.id.pop_duty_picker);
+            popupDutyPicker_ = (TextView) view.findViewById(R.id.pop_duty_picker_month);
             popupDutyPicker_.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showPopupMenu(v, context);
                 }
             });
-            showCalendar(context, -1);
+            Calendar cal = Calendar.getInstance();
+            pickedYear_ = cal.get(Calendar.YEAR);
+            pickedMonth_ = cal.get(Calendar.MONTH) + 1;
+            showCalendar(context, -1, pickedYear_, pickedMonth_);
         }
         return view;
     }
 
-    private void showCalendar(@NonNull Context context, int dutyNumber_) {
+    private void showCalendar(@NonNull Context context, int dutyNumber_, int year, int month) {
         CaldroidMonthFragment caldroidFragment = new CaldroidMonthFragment();
+        caldroidFragment.setCaldroidListener(new CaldroidListener() {
+            @Override
+            public void onSelectDate(Date date, View view) {
+
+            }
+
+            @Override
+            public void onChangeMonth(int month, int year) {
+                pickedMonth_ = month;
+                pickedYear_ = year;
+            }
+        });
         Bundle args = new Bundle();
-        Calendar cal = Calendar.getInstance();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        args.putInt(CaldroidFragment.MONTH, month);
+        args.putInt(CaldroidFragment.YEAR, year);
         caldroidFragment.setArguments(args);
         Map<String, Object> extraData = caldroidFragment.getExtraData();
         extraData.put("DUTY", dutyNumber_);
@@ -99,7 +115,7 @@ public class MonthFragment extends Fragment {
                     default:
                         return false;
                 }
-                showCalendar(context, dutyNumber);
+                showCalendar(context, dutyNumber, pickedYear_, pickedMonth_);
                 popupMenu.dismiss();
                 return true;
             }

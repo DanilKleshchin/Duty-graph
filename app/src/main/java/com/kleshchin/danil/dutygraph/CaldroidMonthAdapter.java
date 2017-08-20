@@ -45,7 +45,7 @@ class CaldroidMonthAdapter extends CaldroidGridAdapter {
             if (dateTime.equals(getToday())) {
                 cellView.setBackgroundResource(com.caldroid.R.drawable.red_border_gray_bg);
             } else {
-                cellView.setBackgroundResource(R.drawable.cell_background_black);
+                cellView.setBackgroundResource(com.caldroid.R.drawable.cell_bg);
             }
 
             int currentYear = calendar.get(Calendar.YEAR);
@@ -61,22 +61,22 @@ class CaldroidMonthAdapter extends CaldroidGridAdapter {
                 String strDuty = "";
                 switch (calculateDate.Calculate()) {
                     case 1:
-                        strDuty = context.getResources().getString(R.string.morning);
+                        strDuty = context.getResources().getString(R.string.calendar_morning);
                         break;
                     case 2:
-                        strDuty = context.getResources().getString(R.string.evening);
+                        strDuty = context.getResources().getString(R.string.calendar_evening);
                         break;
                     case 3:
-                        strDuty = context.getResources().getString(R.string.rest);
+                        strDuty = context.getResources().getString(R.string.calendar_rest);
                         break;
                     case 4:
-                        strDuty = context.getResources().getString(R.string.holiday);
+                        strDuty = context.getResources().getString(R.string.calendar_holiday);
                         break;
                 }
                 dutyTextView.setText(strDuty);
             } else {
-                //dutyTextView.setText("Past time");
-                //dutyTextView.setVisibility(View.INVISIBLE);
+                //dutyTextView_.setText("Past time");
+                //dutyTextView_.setVisibility(View.INVISIBLE);
             }
         }
         dateTextView.setText(String.valueOf(dateTime.getDay()));

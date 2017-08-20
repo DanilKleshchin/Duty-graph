@@ -6,18 +6,25 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
+
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by Danil Kleshchin on 14.08.2017.
@@ -34,16 +41,9 @@ public class ParticularDateFragment extends Fragment {
     int currentYear = calendar.get(Calendar.YEAR);
     int currentMonthOfYear = calendar.get(Calendar.MONTH);
     int currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-    /*private List<Integer> thirtyOne = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
-    private List<Integer> thirty = Arrays.asList(4, 6, 9, 11);*/
-
-
-    TextView tvDate;
-    RadioGroup radioGroup;
-    RadioButton radioButton1;
-    RadioButton radioButton2;
-    RadioButton radioButton3;
-    RadioButton radioButton4;
+    private static int popupCheckedItem_ = -1;
+    private TextView dutyTextView_;
+    private TextView popupDutyPicker_;
     CalendarView calendarView;
 
     @Nullable
@@ -53,42 +53,47 @@ public class ParticularDateFragment extends Fragment {
         if (container != null) {
             context_ = container.getContext();
         }
-        tvDate = (TextView) view.findViewById(R.id.tvDate);
-        tvDate.setOnClickListener(new OnTextViewClickListener());
-        radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
-        radioButton1 = (RadioButton) view.findViewById(R.id.rBmorning);
-        radioButton2 = (RadioButton) view.findViewById(R.id.rBday);
-        radioButton3 = (RadioButton) view.findViewById(R.id.rBfHoliday);
-        radioButton4 = (RadioButton) view.findViewById(R.id.rBsHoliday);
-        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        popupDutyPicker_ = (TextView) view.findViewById(R.id.pop_duty_picker_particular);
+        popupDutyPicker_.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rBmorning:
-                        tvDate.setVisibility(View.VISIBLE);
-                        calendarView.setVisibility(VideoView.VISIBLE);
-                        duty = 1;
-                        break;
-                    case R.id.rBday:
-                        tvDate.setVisibility(View.VISIBLE);
-                        calendarView.setVisibility(VideoView.VISIBLE);
-                        duty = 2;
-                        break;
-                    case R.id.rBfHoliday:
-                        tvDate.setVisibility(View.VISIBLE);
-                        calendarView.setVisibility(VideoView.VISIBLE);
-                        duty = 3;
-                        break;
-                    case R.id.rBsHoliday:
-                        tvDate.setVisibility(View.VISIBLE);
-                        calendarView.setVisibility(VideoView.VISIBLE);
-                        duty = 4;
-                        break;
+            public void onClick(View v) {
+                if (context_ != null) {
+                    showPopupMenu(v, context_);
                 }
             }
         });
+        dutyTextView_ = (TextView) view.findViewById(R.id.duty_type_text);
+        dutyTextView_.setOnClickListener(new OnTextViewClickListener());
+
+        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
+
+            /*radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    switch (checkedId) {
+                        case R.id.rBmorning:
+                            dutyTextView_.setVisibility(View.VISIBLE);
+                            calendarView.setVisibility(VideoView.VISIBLE);
+                            duty = 1;
+                            break;
+                        case R.id.rBday:
+                            dutyTextView_.setVisibility(View.VISIBLE);
+                            calendarView.setVisibility(VideoView.VISIBLE);
+                            duty = 2;
+                            break;
+                        case R.id.rBfHoliday:
+                            dutyTextView_.setVisibility(View.VISIBLE);
+                            calendarView.setVisibility(VideoView.VISIBLE);
+                            duty = 3;
+                            break;
+                        case R.id.rBsHoliday:
+                            dutyTextView_.setVisibility(View.VISIBLE);
+                            calendarView.setVisibility(VideoView.VISIBLE);
+                            duty = 4;
+                            break;
+                    }
+                }
+            });*/
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -144,10 +149,11 @@ public class ParticularDateFragment extends Fragment {
                         strDuty = getResources().getString(R.string.holiday);
                         break;
                 }
-                tvDate.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
+                dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
                 calendarView.refreshDrawableState();
             }
         });
+
         return view;
     }
 
@@ -209,11 +215,91 @@ public class ParticularDateFragment extends Fragment {
                     strDuty = getResources().getString(R.string.holiday);
                     break;
             }
-            tvDate.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
+            dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
             calendarView.refreshDrawableState();
 
         }
     };
+
+    private void showCalendar(@NonNull Context context, int dutyNumber_, int year, int month) {
+        CaldroidMonthFragment caldroidFragment = new CaldroidMonthFragment();
+        caldroidFragment.setCaldroidListener(new CaldroidListener() {
+            @Override
+            public void onSelectDate(Date date, View view) {
+
+            }
+
+            @Override
+            public void onChangeMonth(int month, int year) {
+                /*pickedMonth_ = month;
+                pickedYear_ = year;*/
+            }
+        });
+        Bundle args = new Bundle();
+        args.putInt(CaldroidFragment.MONTH, month);
+        args.putInt(CaldroidFragment.YEAR, year);
+        caldroidFragment.setArguments(args);
+        Map<String, Object> extraData = caldroidFragment.getExtraData();
+        extraData.put("DUTY", dutyNumber_);
+        caldroidFragment.refreshView();
+        FragmentTransaction t = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.month_calendar, caldroidFragment);
+        t.commit();
+    }
+
+    private void showPopupMenu(@NonNull View v, @NonNull final Context context) {
+        final PopupMenu popupMenu = new PopupMenu(context, v);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
+        setPopupItemChecked(popupCheckedItem_, 4, popupMenu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int dutyNumber;
+                switch (item.getItemId()) {
+                    case R.id.duty_morning_pop:
+                        setPopupItemChecked(0, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.morning));
+                        popupCheckedItem_ = 0;
+                        dutyNumber = 1;
+                        break;
+                    case R.id.duty_evening_pop:
+                        setPopupItemChecked(1, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.evening));
+                        popupCheckedItem_ = 1;
+                        dutyNumber = 2;
+                        break;
+                    case R.id.rest_pop:
+                        setPopupItemChecked(2, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.rest));
+                        popupCheckedItem_ = 2;
+                        dutyNumber = 3;
+                        break;
+                    case R.id.holiday_pop:
+                        setPopupItemChecked(3, 4, popupMenu);
+                        popupDutyPicker_.setText(context.getString(R.string.holiday));
+                        popupCheckedItem_ = 3;
+                        dutyNumber = 4;
+                        break;
+                    default:
+                        return false;
+                }
+                //showCalendar(context, dutyNumber, pickedYear_, pickedMonth_);
+                popupMenu.dismiss();
+                return true;
+            }
+        });
+        popupMenu.show();
+    }
+
+    private void setPopupItemChecked(int position, int itemsCount, @NonNull PopupMenu popupMenu) {
+        if (position > -1 && position <= itemsCount) {
+            for (int i = 0; i < itemsCount; ++i) {
+                popupMenu.getMenu().getItem(i).setChecked(false);
+            }
+            popupMenu.getMenu().getItem(position).setChecked(true);
+        }
+    }
 
     private class OnTextViewClickListener implements View.OnClickListener {
         @Override

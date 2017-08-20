@@ -6,10 +6,10 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/pop_duty_picker"
+        android:id="@+id/pop_duty_picker_month"
         android:layout_marginBottom="30sp"
-        android:text="@string/choose_date"
-        android:textSize="25sp"
+        android:text="@string/enter"
+        android:textSize="@dimen/text_size_large"
         android:gravity="center"
         android:textColor="@android:color/black"
         android:layout_width="match_parent"
