@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -30,13 +32,23 @@ public class MonthFragment extends Fragment {
     private static int popupCheckedItem_ = -1;
     private static int pickedMonth_;
     private static int pickedYear_;
+    private static int dutyNumber_;
+    private CheckBox checkBoxColors_;
     private TextView popupDutyPicker_;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_month, container, false);
         if (container != null) {
             final Context context = container.getContext();
+            checkBoxColors_ = (CheckBox) view.findViewById(R.id.color_checkbox);
+            checkBoxColors_.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    showCalendar(context, dutyNumber_, pickedYear_, pickedMonth_);
+                }
+            });
             popupDutyPicker_ = (TextView) view.findViewById(R.id.pop_duty_picker_month);
             popupDutyPicker_.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -72,6 +84,7 @@ public class MonthFragment extends Fragment {
         caldroidFragment.setArguments(args);
         Map<String, Object> extraData = caldroidFragment.getExtraData();
         extraData.put("DUTY", dutyNumber_);
+        extraData.put("COLOR", checkBoxColors_.isChecked());
         caldroidFragment.refreshView();
         FragmentTransaction t = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         t.replace(R.id.month_calendar, caldroidFragment);
@@ -86,36 +99,35 @@ public class MonthFragment extends Fragment {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                int dutyNumber;
                 switch (item.getItemId()) {
                     case R.id.duty_morning_pop:
                         setPopupItemChecked(0, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.morning));
                         popupCheckedItem_ = 0;
-                        dutyNumber = 1;
+                        dutyNumber_ = 1;
                         break;
                     case R.id.duty_evening_pop:
                         setPopupItemChecked(1, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.evening));
                         popupCheckedItem_ = 1;
-                        dutyNumber = 2;
+                        dutyNumber_ = 2;
                         break;
                     case R.id.rest_pop:
                         setPopupItemChecked(2, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.rest));
                         popupCheckedItem_ = 2;
-                        dutyNumber = 3;
+                        dutyNumber_ = 3;
                         break;
                     case R.id.holiday_pop:
                         setPopupItemChecked(3, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.holiday));
                         popupCheckedItem_ = 3;
-                        dutyNumber = 4;
+                        dutyNumber_ = 4;
                         break;
                     default:
                         return false;
                 }
-                showCalendar(context, dutyNumber, pickedYear_, pickedMonth_);
+                showCalendar(context, dutyNumber_, pickedYear_, pickedMonth_);
                 popupMenu.dismiss();
                 return true;
             }

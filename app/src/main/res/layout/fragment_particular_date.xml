@@ -7,9 +7,9 @@
 
     <TextView
         android:id="@+id/pop_duty_picker_particular"
-        android:layout_marginBottom="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
         android:gravity="center"
         android:text="@string/enter"
         android:textColor="@android:color/black"
@@ -17,20 +17,20 @@
 
     <TextView
         android:id="@+id/duty_type_text"
-        android:layout_marginBottom="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_marginBottom="20sp"
         android:layout_marginTop="10dp"
         android:clickable="true"
+        android:gravity="center_horizontal"
         android:text="@string/choose_date"
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_size_large"
         android:visibility="invisible"/>
 
-    <CalendarView
-        android:id="@+id/calendarView"
+    <LinearLayout
+        android:id="@+id/placeholder_particular"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"/>
+        android:orientation="vertical"/>
 </LinearLayout>

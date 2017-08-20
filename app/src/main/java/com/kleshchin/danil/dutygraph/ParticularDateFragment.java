@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +24,6 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by Danil Kleshchin on 14.08.2017.
@@ -36,7 +35,6 @@ public class ParticularDateFragment extends Fragment {
     int myYear = calendar.get(Calendar.YEAR);
     int myMonth = calendar.get(Calendar.MONTH);
     int myDay = calendar.get(Calendar.DAY_OF_MONTH);
-    int duty;
     String strDuty = null;
     int currentYear = calendar.get(Calendar.YEAR);
     int currentMonthOfYear = calendar.get(Calendar.MONTH);
@@ -44,7 +42,8 @@ public class ParticularDateFragment extends Fragment {
     private static int popupCheckedItem_ = -1;
     private TextView dutyTextView_;
     private TextView popupDutyPicker_;
-    CalendarView calendarView;
+    private static int dutyNumber_;
+
 
     @Nullable
     @Override
@@ -64,96 +63,6 @@ public class ParticularDateFragment extends Fragment {
         });
         dutyTextView_ = (TextView) view.findViewById(R.id.duty_type_text);
         dutyTextView_.setOnClickListener(new OnTextViewClickListener());
-
-        calendarView = (CalendarView) view.findViewById(R.id.calendarView);
-
-            /*radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId) {
-                        case R.id.rBmorning:
-                            dutyTextView_.setVisibility(View.VISIBLE);
-                            calendarView.setVisibility(VideoView.VISIBLE);
-                            duty = 1;
-                            break;
-                        case R.id.rBday:
-                            dutyTextView_.setVisibility(View.VISIBLE);
-                            calendarView.setVisibility(VideoView.VISIBLE);
-                            duty = 2;
-                            break;
-                        case R.id.rBfHoliday:
-                            dutyTextView_.setVisibility(View.VISIBLE);
-                            calendarView.setVisibility(VideoView.VISIBLE);
-                            duty = 3;
-                            break;
-                        case R.id.rBsHoliday:
-                            dutyTextView_.setVisibility(View.VISIBLE);
-                            calendarView.setVisibility(VideoView.VISIBLE);
-                            duty = 4;
-                            break;
-                    }
-                }
-            });*/
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                if (year < currentYear || year == currentYear && month < currentMonthOfYear || year == currentYear && month == currentMonthOfYear && dayOfMonth < currentDayOfMonth) {
-                    Toast.makeText(context_, "Это уже прошлое", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (year - myYear >= 2) {
-                    Toast.makeText(context_, "Слишком далёкое будущее", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                calendarView.refreshDrawableState();
-                myYear = year;
-                myMonth = month;
-                myDay = dayOfMonth;
-                String dayOfWeek = null;
-                calendar.set(year, month, dayOfMonth);
-                calendarView.setDate(calendar.getTimeInMillis(), true, true);
-                switch (calendar.get(Calendar.DAY_OF_WEEK)) {
-                    case Calendar.SUNDAY:
-                        dayOfWeek = "Воскресенье";
-                        break;
-                    case Calendar.MONDAY:
-                        dayOfWeek = "Понедельник";
-                        break;
-                    case Calendar.TUESDAY:
-                        dayOfWeek = "Вторник";
-                        break;
-                    case Calendar.WEDNESDAY:
-                        dayOfWeek = "Среда";
-                        break;
-                    case Calendar.THURSDAY:
-                        dayOfWeek = "Четверг";
-                        break;
-                    case Calendar.FRIDAY:
-                        dayOfWeek = "Пятница";
-                        break;
-                    case Calendar.SATURDAY:
-                        dayOfWeek = "Суббота";
-                }
-                CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, duty);
-                switch (calculateDate.Calculate()) {
-                    case 1:
-                        strDuty = getResources().getString(R.string.morning);
-                        break;
-                    case 2:
-                        strDuty = getResources().getString(R.string.evening);
-                        break;
-                    case 3:
-                        strDuty = getResources().getString(R.string.rest);
-                        break;
-                    case 4:
-                        strDuty = getResources().getString(R.string.holiday);
-                        break;
-                }
-                dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
-                calendarView.refreshDrawableState();
-            }
-        });
-
         return view;
     }
 
@@ -164,43 +73,25 @@ public class ParticularDateFragment extends Fragment {
             if (year < currentYear ||
                     year == currentYear && monthOfYear < currentMonthOfYear ||
                     year == currentYear && monthOfYear == currentMonthOfYear && dayOfMonth < currentDayOfMonth) {
-                Toast.makeText(context_, "Это уже прошлое", Toast.LENGTH_LONG).show();
+                Toast.makeText(context_, R.string.past_time, Toast.LENGTH_LONG).show();
                 return;
             }
             if (year - myYear >= 2) {
-                Toast.makeText(context_, "Слишком далёкое будущее", Toast.LENGTH_LONG).show();
+                Toast.makeText(context_, R.string.far_far_future, Toast.LENGTH_LONG).show();
                 return;
             }
-            calendarView.refreshDrawableState();
             myYear = year;
             myMonth = monthOfYear;
             myDay = dayOfMonth;
-            String dayOfWeek = null;
-            calendar.set(year, monthOfYear, dayOfMonth);
-            calendarView.setDate(calendar.getTimeInMillis(), true, true);
-            switch (calendar.get(Calendar.DAY_OF_WEEK)) {
-                case Calendar.SUNDAY:
-                    dayOfWeek = "Воскресенье";
-                    break;
-                case Calendar.MONDAY:
-                    dayOfWeek = "Понедельник";
-                    break;
-                case Calendar.TUESDAY:
-                    dayOfWeek = "Вторник";
-                    break;
-                case Calendar.WEDNESDAY:
-                    dayOfWeek = "Среда";
-                    break;
-                case Calendar.THURSDAY:
-                    dayOfWeek = "Четверг";
-                    break;
-                case Calendar.FRIDAY:
-                    dayOfWeek = "Пятница";
-                    break;
-                case Calendar.SATURDAY:
-                    dayOfWeek = "Суббота";
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, myYear);
+            cal.set(Calendar.MONTH, myMonth);
+            cal.set(Calendar.DAY_OF_MONTH, myDay);
+            if (context_ != null) {
+                showCalendar(context_, dutyNumber_, cal.getTime());
             }
-            CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, duty);
+            calendar.set(year, monthOfYear, dayOfMonth);
+            CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, dutyNumber_);
             switch (calculateDate.Calculate()) {
                 case 1:
                     strDuty = getResources().getString(R.string.morning);
@@ -215,35 +106,63 @@ public class ParticularDateFragment extends Fragment {
                     strDuty = getResources().getString(R.string.holiday);
                     break;
             }
-            dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + dayOfWeek + "\n" + strDuty);
-            calendarView.refreshDrawableState();
-
+            dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + "\n" + strDuty);
         }
     };
 
-    private void showCalendar(@NonNull Context context, int dutyNumber_, int year, int month) {
-        CaldroidMonthFragment caldroidFragment = new CaldroidMonthFragment();
+    private void showCalendar(@NonNull final Context context, final int dutyNumber_, @Nullable Date date) {
+        final CaldroidMonthFragment caldroidFragment = new CaldroidMonthFragment();
         caldroidFragment.setCaldroidListener(new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
-
-            }
-
-            @Override
-            public void onChangeMonth(int month, int year) {
-                /*pickedMonth_ = month;
-                pickedYear_ = year;*/
+                caldroidFragment.setBackgroundDrawableForDate(ContextCompat.getDrawable(context, R.drawable.cell_border_black), date);
+                caldroidFragment.refreshView();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                myYear = calendar.get(Calendar.YEAR);
+                myMonth = calendar.get(Calendar.MONTH);
+                myDay = calendar.get(Calendar.DAY_OF_MONTH);
+                if (myYear < currentYear ||
+                        myYear == currentYear && myMonth < currentMonthOfYear ||
+                        myYear == currentYear && myMonth == currentMonthOfYear && myDay < currentDayOfMonth) {
+                    Toast.makeText(context_, R.string.past_time, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (myYear - currentYear >= 2) {
+                    Toast.makeText(context_, R.string.far_far_future, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, dutyNumber_);
+                switch (calculateDate.Calculate()) {
+                    case 1:
+                        strDuty = getResources().getString(R.string.morning);
+                        break;
+                    case 2:
+                        strDuty = getResources().getString(R.string.evening);
+                        break;
+                    case 3:
+                        strDuty = getResources().getString(R.string.rest);
+                        break;
+                    case 4:
+                        strDuty = getResources().getString(R.string.holiday);
+                        break;
+                }
+                dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + "\n" + strDuty);
             }
         });
-        Bundle args = new Bundle();
-        args.putInt(CaldroidFragment.MONTH, month);
-        args.putInt(CaldroidFragment.YEAR, year);
-        caldroidFragment.setArguments(args);
-        Map<String, Object> extraData = caldroidFragment.getExtraData();
-        extraData.put("DUTY", dutyNumber_);
+        Calendar cal = Calendar.getInstance();
+        if (date != null) {
+            caldroidFragment.setBackgroundDrawableForDate(ContextCompat.getDrawable(context, R.drawable.cell_border_black), date);
+            caldroidFragment.refreshView();
+        } else {
+            Bundle args = new Bundle();
+            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+            args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+            caldroidFragment.setArguments(args);
+        }
         caldroidFragment.refreshView();
         FragmentTransaction t = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-        t.replace(R.id.month_calendar, caldroidFragment);
+        t.replace(R.id.placeholder_particular, caldroidFragment);
         t.commit();
     }
 
@@ -255,36 +174,36 @@ public class ParticularDateFragment extends Fragment {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                int dutyNumber;
                 switch (item.getItemId()) {
                     case R.id.duty_morning_pop:
                         setPopupItemChecked(0, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.morning));
                         popupCheckedItem_ = 0;
-                        dutyNumber = 1;
+                        dutyNumber_ = 1;
                         break;
                     case R.id.duty_evening_pop:
                         setPopupItemChecked(1, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.evening));
                         popupCheckedItem_ = 1;
-                        dutyNumber = 2;
+                        dutyNumber_ = 2;
                         break;
                     case R.id.rest_pop:
                         setPopupItemChecked(2, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.rest));
                         popupCheckedItem_ = 2;
-                        dutyNumber = 3;
+                        dutyNumber_ = 3;
                         break;
                     case R.id.holiday_pop:
                         setPopupItemChecked(3, 4, popupMenu);
                         popupDutyPicker_.setText(context.getString(R.string.holiday));
                         popupCheckedItem_ = 3;
-                        dutyNumber = 4;
+                        dutyNumber_ = 4;
                         break;
                     default:
                         return false;
                 }
-                //showCalendar(context, dutyNumber, pickedYear_, pickedMonth_);
+                showCalendar(context, dutyNumber_, null);
+                dutyTextView_.setVisibility(View.VISIBLE);
                 popupMenu.dismiss();
                 return true;
             }
