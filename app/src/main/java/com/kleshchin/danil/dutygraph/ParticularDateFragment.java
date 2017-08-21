@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -43,6 +44,7 @@ public class ParticularDateFragment extends Fragment {
     private TextView dutyTextView_;
     private TextView popupDutyPicker_;
     private static int dutyNumber_;
+    private CardView dutyLayout_;
 
 
     @Nullable
@@ -52,6 +54,7 @@ public class ParticularDateFragment extends Fragment {
         if (container != null) {
             context_ = container.getContext();
         }
+        dutyLayout_ = (CardView) view.findViewById(R.id.duty_layout);
         popupDutyPicker_ = (TextView) view.findViewById(R.id.pop_duty_picker_particular);
         popupDutyPicker_.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +206,7 @@ public class ParticularDateFragment extends Fragment {
                         return false;
                 }
                 showCalendar(context, dutyNumber_, null);
-                dutyTextView_.setVisibility(View.VISIBLE);
+                dutyLayout_.setVisibility(View.VISIBLE);
                 popupMenu.dismiss();
                 return true;
             }

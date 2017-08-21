@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -35,17 +36,21 @@ public class MonthFragment extends Fragment {
     private static int dutyNumber_;
     private CheckBox checkBoxColors_;
     private TextView popupDutyPicker_;
+    private LinearLayout checkBoxLayout_;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_month, container, false);
+        final View view = inflater.inflate(R.layout.fragment_month, container, false);
         if (container != null) {
             final Context context = container.getContext();
             checkBoxColors_ = (CheckBox) view.findViewById(R.id.color_checkbox);
+            checkBoxLayout_ = (LinearLayout) view.findViewById(R.id.checkbox_layout);
             checkBoxColors_.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.colors_layout);
+                    linearLayout.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
                     showCalendar(context, dutyNumber_, pickedYear_, pickedMonth_);
                 }
             });
@@ -128,6 +133,7 @@ public class MonthFragment extends Fragment {
                         return false;
                 }
                 showCalendar(context, dutyNumber_, pickedYear_, pickedMonth_);
+                checkBoxLayout_.setVisibility(View.VISIBLE);
                 popupMenu.dismiss();
                 return true;
             }
