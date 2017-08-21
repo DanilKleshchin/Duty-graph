@@ -30,6 +30,10 @@ import java.util.Map;
  * Created by Danil Kleshchin on 14.08.2017.
  */
 public class MonthFragment extends Fragment {
+
+    private static final String KEY_DUTY = "DUTY";
+    private static final String KEY_COLOR = "COLOR";
+
     private static int popupCheckedItem_ = -1;
     private static int pickedMonth_;
     private static int pickedYear_;
@@ -88,8 +92,8 @@ public class MonthFragment extends Fragment {
         args.putInt(CaldroidFragment.YEAR, year);
         caldroidFragment.setArguments(args);
         Map<String, Object> extraData = caldroidFragment.getExtraData();
-        extraData.put("DUTY", dutyNumber_);
-        extraData.put("COLOR", checkBoxColors_.isChecked());
+        extraData.put(KEY_DUTY, dutyNumber_);
+        extraData.put(KEY_COLOR, checkBoxColors_.isChecked());
         caldroidFragment.refreshView();
         FragmentTransaction t = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
         t.replace(R.id.month_calendar, caldroidFragment);

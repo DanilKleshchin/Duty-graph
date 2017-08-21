@@ -19,6 +19,9 @@ import hirondelle.date4j.DateTime;
  */
 class CaldroidMonthAdapter extends CaldroidGridAdapter {
 
+    private static final String KEY_DUTY = "DUTY";
+    private static final String KEY_COLOR = "COLOR";
+
     CaldroidMonthAdapter(Context context, int month, int year, Map<String, Object> caldroidData, Map<String, Object> extraData) {
         super(context, month, year, caldroidData, extraData);
     }
@@ -37,10 +40,10 @@ class CaldroidMonthAdapter extends CaldroidGridAdapter {
 
         TextView dateTextView = (TextView) cellView.findViewById(R.id.caldroid_date);
         TextView dutyTextView = (TextView) cellView.findViewById(R.id.caldroid_duty);
-        Integer dutyNumber = (Integer) extraData.get("DUTY");
+        Integer dutyNumber = (Integer) extraData.get(KEY_DUTY);
         if (dateTime.getMonth() != month) {
-            dateTextView.setTextColor(resources
-                    .getColor(com.caldroid.R.color.caldroid_darker_gray));
+            dateTextView.setTextColor(ContextCompat
+                    .getColor(context, com.caldroid.R.color.caldroid_darker_gray));
         }
         if (dateTime.equals(getToday())) {
             cellView.setBackgroundResource(com.caldroid.R.drawable.red_border_gray_bg);
@@ -48,7 +51,6 @@ class CaldroidMonthAdapter extends CaldroidGridAdapter {
             cellView.setBackgroundResource(com.caldroid.R.drawable.cell_bg);
         }
         if (dutyNumber != null && dutyNumber != -1) {
-
             int currentYear = calendar.get(Calendar.YEAR);
             int currentMonthOfYear = calendar.get(Calendar.MONTH);
             int currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -79,7 +81,7 @@ class CaldroidMonthAdapter extends CaldroidGridAdapter {
                         colorRes = ContextCompat.getColor(context, android.R.color.holo_red_light);
                         break;
                 }
-                if ((boolean) extraData.get("COLOR")) {
+                if ((boolean) extraData.get(KEY_COLOR)) {
                     cellView.setBackgroundColor(colorRes);
                 } else {
                     dutyTextView.setText(strDuty);
@@ -88,12 +90,10 @@ class CaldroidMonthAdapter extends CaldroidGridAdapter {
         }
         dateTextView.setText(String.valueOf(dateTime.getDay()));
         setCustomResources(dateTime, cellView, dateTextView);
-
         return cellView;
     }
 
     private boolean checkPastDate(int year, int monthOfYear, int dayOfMonth, int currentYear, int currentMonthOfYear, int currentDayOfMonth) {
-        boolean b = year < currentYear || year == currentYear && monthOfYear < currentMonthOfYear || year == currentYear && monthOfYear == currentMonthOfYear && dayOfMonth < currentDayOfMonth || year - currentYear >= 2;
-        return b;
+        return year < currentYear || year == currentYear && monthOfYear < currentMonthOfYear || year == currentYear && monthOfYear == currentMonthOfYear && dayOfMonth < currentDayOfMonth || year - currentYear >= 2;
     }
 }

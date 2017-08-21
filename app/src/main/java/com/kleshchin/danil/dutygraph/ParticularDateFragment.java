@@ -30,22 +30,22 @@ import java.util.Date;
  * Created by Danil Kleshchin on 14.08.2017.
  */
 public class ParticularDateFragment extends Fragment {
+
     @Nullable
     private Context context_;
-    Calendar calendar = Calendar.getInstance();
-    int myYear = calendar.get(Calendar.YEAR);
-    int myMonth = calendar.get(Calendar.MONTH);
-    int myDay = calendar.get(Calendar.DAY_OF_MONTH);
-    String strDuty = null;
-    int currentYear = calendar.get(Calendar.YEAR);
-    int currentMonthOfYear = calendar.get(Calendar.MONTH);
-    int currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+    private Calendar calendar_ = Calendar.getInstance();
+    int myYear = calendar_.get(Calendar.YEAR);
+    int myMonth = calendar_.get(Calendar.MONTH);
+    int myDay = calendar_.get(Calendar.DAY_OF_MONTH);
+    int currentYear = calendar_.get(Calendar.YEAR);
+    int currentMonthOfYear = calendar_.get(Calendar.MONTH);
+    int currentDayOfMonth = calendar_.get(Calendar.DAY_OF_MONTH);
+    private String strDuty_ = null;
     private static int popupCheckedItem_ = -1;
+    private static int dutyNumber_;
     private TextView dutyTextView_;
     private TextView popupDutyPicker_;
-    private static int dutyNumber_;
     private CardView dutyLayout_;
-
 
     @Nullable
     @Override
@@ -73,14 +73,7 @@ public class ParticularDateFragment extends Fragment {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
-            if (year < currentYear ||
-                    year == currentYear && monthOfYear < currentMonthOfYear ||
-                    year == currentYear && monthOfYear == currentMonthOfYear && dayOfMonth < currentDayOfMonth) {
-                Toast.makeText(context_, R.string.past_time, Toast.LENGTH_LONG).show();
-                return;
-            }
-            if (year - myYear >= 2) {
-                Toast.makeText(context_, R.string.far_far_future, Toast.LENGTH_LONG).show();
+            if (!isCorrectDate(year, monthOfYear, dayOfMonth)) {
                 return;
             }
             myYear = year;
@@ -91,30 +84,15 @@ public class ParticularDateFragment extends Fragment {
             cal.set(Calendar.MONTH, myMonth);
             cal.set(Calendar.DAY_OF_MONTH, myDay);
             if (context_ != null) {
-                showCalendar(context_, dutyNumber_, cal.getTime());
+                showCalendar(context_, cal.getTime());
             }
-            calendar.set(year, monthOfYear, dayOfMonth);
-            CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, dutyNumber_);
-            switch (calculateDate.Calculate()) {
-                case 1:
-                    strDuty = getResources().getString(R.string.morning);
-                    break;
-                case 2:
-                    strDuty = getResources().getString(R.string.evening);
-                    break;
-                case 3:
-                    strDuty = getResources().getString(R.string.rest);
-                    break;
-                case 4:
-                    strDuty = getResources().getString(R.string.holiday);
-                    break;
-            }
-            dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + "\n" + strDuty);
-
+            calendar_.set(year, monthOfYear, dayOfMonth);
+            obtainStrDuty();
+            dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + "\n" + strDuty_);
         }
     };
 
-    private void showCalendar(@NonNull final Context context, final int dutyNumber_, @Nullable Date date) {
+    private void showCalendar(@NonNull final Context context, @Nullable Date date) {
         final CaldroidMonthFragment caldroidFragment = new CaldroidMonthFragment();
         caldroidFragment.setCaldroidListener(new CaldroidListener() {
             @Override
@@ -126,32 +104,11 @@ public class ParticularDateFragment extends Fragment {
                 myYear = calendar.get(Calendar.YEAR);
                 myMonth = calendar.get(Calendar.MONTH);
                 myDay = calendar.get(Calendar.DAY_OF_MONTH);
-                if (myYear < currentYear ||
-                        myYear == currentYear && myMonth < currentMonthOfYear ||
-                        myYear == currentYear && myMonth == currentMonthOfYear && myDay < currentDayOfMonth) {
-                    Toast.makeText(context_, R.string.past_time, Toast.LENGTH_LONG).show();
+                if (!isCorrectDate(myYear, myMonth, myDay)) {
                     return;
                 }
-                if (myYear - currentYear >= 2) {
-                    Toast.makeText(context_, R.string.far_far_future, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, dutyNumber_);
-                switch (calculateDate.Calculate()) {
-                    case 1:
-                        strDuty = getResources().getString(R.string.morning);
-                        break;
-                    case 2:
-                        strDuty = getResources().getString(R.string.evening);
-                        break;
-                    case 3:
-                        strDuty = getResources().getString(R.string.rest);
-                        break;
-                    case 4:
-                        strDuty = getResources().getString(R.string.holiday);
-                        break;
-                }
-                dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + "\n" + strDuty);
+                obtainStrDuty();
+                dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + "\n" + strDuty_);
             }
         });
         Calendar cal = Calendar.getInstance();
@@ -211,7 +168,7 @@ public class ParticularDateFragment extends Fragment {
                     default:
                         return false;
                 }
-                showCalendar(context, dutyNumber_, null);
+                showCalendar(context, null);
                 dutyLayout_.setVisibility(View.VISIBLE);
                 popupMenu.dismiss();
                 return true;
@@ -227,6 +184,38 @@ public class ParticularDateFragment extends Fragment {
             }
             popupMenu.getMenu().getItem(position).setChecked(true);
         }
+    }
+
+    private void obtainStrDuty() {
+        CalculateDate calculateDate = new CalculateDate(myYear, myMonth, myDay, currentYear, currentMonthOfYear, currentDayOfMonth, dutyNumber_);
+        switch (calculateDate.Calculate()) {
+            case 1:
+                strDuty_ = getResources().getString(R.string.morning);
+                break;
+            case 2:
+                strDuty_ = getResources().getString(R.string.evening);
+                break;
+            case 3:
+                strDuty_ = getResources().getString(R.string.rest);
+                break;
+            case 4:
+                strDuty_ = getResources().getString(R.string.holiday);
+                break;
+        }
+    }
+
+    private boolean isCorrectDate(int year, int monthOfYear, int dayOfMonth) {
+        if (year < currentYear ||
+                year == currentYear && monthOfYear < currentMonthOfYear ||
+                year == currentYear && monthOfYear == currentMonthOfYear && dayOfMonth < currentDayOfMonth) {
+            Toast.makeText(context_, R.string.past_time, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (year - myYear >= 2) {
+            Toast.makeText(context_, R.string.far_far_future, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 
     private class OnTextViewClickListener implements View.OnClickListener {

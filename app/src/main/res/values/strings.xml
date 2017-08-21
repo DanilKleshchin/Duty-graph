@@ -2,7 +2,6 @@
     <string name="app_name">Duty Graph</string>
     <string name="particular_date">Particular date</string>
     <string name="whole_month">Whole month</string>
-    <string name="choose_date">Choose date</string>
     <string name="morning">Duty at 8.00</string>
     <string name="evening">Duty at 19.00</string>
     <string name="rest">Vacation</string>
