@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Расписание смен</string>
+    <string name="calendar_evening">ночь</string>
+    <string name="calendar_holiday">выход</string>
+    <string name="calendar_morning">утро</string>
+    <string name="calendar_rest">отсып</string>
+    <string name="cancel">Отмена</string>
+    <string name="choose_date">Выберите дату</string>
+    <string name="enter">Какая смена сегодя?</string>
+    <string name="evening">Смена с 19.00</string>
+    <string name="holiday">Выходной</string>
+    <string name="morning">Смена с 8.00</string>
+    <string name="month_picker">На месяц</string>
+    <string name="particular_date">Дата</string>
+    <string name="past_time">Это уже прошлое</string>
+    <string name="rest">Отсыпной</string>
+    <string name="select_date">Выберите дату</string>
+    <string name="set">Выбрать</string>
+    <string name="use_color_instead_of_strings">Использовать цвета</string>
+    <string name="whole_month">Целый месяц</string>
+    <string name="far_far_future">Слишком далекое будущее</string>
+</resources>

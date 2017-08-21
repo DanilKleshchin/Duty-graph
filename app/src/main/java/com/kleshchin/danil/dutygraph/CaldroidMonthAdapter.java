@@ -64,7 +64,7 @@ class CaldroidMonthAdapter extends CaldroidGridAdapter {
                 switch (calculateDate.Calculate()) {
                     case 1:
                         strDuty = context.getResources().getString(R.string.calendar_morning);
-                        colorRes = ContextCompat.getColor(context, android.R.color.holo_green_dark);
+                        colorRes = ContextCompat.getColor(context, android.R.color.holo_green_light);
                         break;
                     case 2:
                         strDuty = context.getResources().getString(R.string.calendar_evening);

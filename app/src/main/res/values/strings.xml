@@ -16,9 +16,9 @@
     <string name="set">Set</string>
     <string name="cancel">Cancel</string>
     <string name="select_date">Select the date</string>
-    <string name="past_time">Это уже прошлое</string>
-    <string name="far_far_future">Слишком далёкое будущее</string>
+    <string name="past_time">It\'s past time</string>
     <string name="use_color_instead_of_strings">Use color instead of strings</string>
+    <string name="far_far_future">Far future</string>
     <array name="months">
         <item name = "january">January</item>
         <item name = "february">February</item>

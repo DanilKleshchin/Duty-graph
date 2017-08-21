@@ -110,6 +110,7 @@ public class ParticularDateFragment extends Fragment {
                     break;
             }
             dutyTextView_.setText(myDay + "/" + (myMonth + 1) + "/" + myYear + " это " + "\n" + strDuty);
+
         }
     };
 
@@ -156,6 +157,11 @@ public class ParticularDateFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         if (date != null) {
             caldroidFragment.setBackgroundDrawableForDate(ContextCompat.getDrawable(context, R.drawable.cell_border_black), date);
+            Bundle args = new Bundle();
+            cal.setTime(date);
+            args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+            args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+            caldroidFragment.setArguments(args);
             caldroidFragment.refreshView();
         } else {
             Bundle args = new Bundle();
