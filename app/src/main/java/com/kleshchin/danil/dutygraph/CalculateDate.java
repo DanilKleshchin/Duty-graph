@@ -38,7 +38,7 @@ class CalculateDate {
             }
             while (true) {
                 if (currentMonthOfYear == 1) {
-                    if (calendar.get(Calendar.DAY_OF_YEAR) > 365) {
+                    if (calendar.getActualMaximum(Calendar.DAY_OF_YEAR) > 365) {
                         countDuty();
                         if (currentDayOfMonth >= 29) {
                             currentMonthOfYear++;
