@@ -1,7 +1,5 @@
 package com.kleshchin.danil.dutygraph;
 
-import com.roomorama.caldroid.CaldroidFragment;
-
 /**
  * Created by Danil Kleshchin on 18.08.2017.
  */

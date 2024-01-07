@@ -3,12 +3,6 @@ package com.kleshchin.danil.dutygraph;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,8 +11,14 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -55,7 +55,7 @@ public class MonthFragment extends Fragment {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.colors_layout);
                     linearLayout.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
-                    showCalendar(context, dutyNumber_, pickedYear_, pickedMonth_);
+                    //showCalendar(context, dutyNumber_, pickedYear_, pickedMonth_);
                 }
             });
             popupDutyPicker_ = (TextView) view.findViewById(R.id.pop_duty_picker_month);
@@ -95,7 +95,7 @@ public class MonthFragment extends Fragment {
         extraData.put(KEY_DUTY, dutyNumber_);
         extraData.put(KEY_COLOR, checkBoxColors_.isChecked());
         caldroidFragment.refreshView();
-        FragmentTransaction t = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
+        FragmentTransaction t = getChildFragmentManager().beginTransaction();
         t.replace(R.id.month_calendar, caldroidFragment);
         t.commit();
     }
